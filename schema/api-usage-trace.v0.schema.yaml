@@ -1,0 +1,14 @@
+"$id": https://github.com/groboclown/anhinga-security/schema/api-usage-trace.v0.schema.yaml
+"$schema": https://json-schema.org/draft/2020-12/schema
+title: API Usage Trace
+description: >
+  Describes the static analysis of a codebase, tracing usage of known security usage
+  library calls through the codebase.
+type: object
+required:
+  - schema-version
+properties:
+  schema-version:
+    description: The schema version used by the document.  It must match this schema's $id.
+    type: string
+    const: v0.0

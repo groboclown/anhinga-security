@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.github.groboclown.anhinga-security'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    implementation 'net.groboclown:retval:2.1.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'net.groboclown.anhinga-security:anhinga-java-schema:+'
+}
+
+test {
+    useJUnitPlatform()
+}

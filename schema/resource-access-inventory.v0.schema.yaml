@@ -1,0 +1,212 @@
+"$id": https://github.com/groboclown/anhinga-security/schema/security-usage-inventory.v0.schema.yaml
+"$schema": https://json-schema.org/draft/2020-12/schema
+title: Resource Access Inventory
+description: >
+  Describes which security resources different library API use.
+type: object
+required:
+  - schema-version
+  - framework
+  - secure-resources
+  - inventory
+properties:
+  schema-version:
+    description: The schema version used by the document.  It must match this schema's $id.
+    type: string
+    const: v0.0
+
+  framework:
+    description: >
+      A formal name used to link this inventory to the code analysis.  This is used to
+      give deeper meaning to the library and endpoint semantics within this document.
+    type: string
+
+  secure-resources:
+    title: Secure Resources
+    description: >
+      A list of all secure resource documents that this relates to.
+    type: array
+    items:
+      title: Secure Resource Reference
+      description: >
+        A relationship between the external, unique secure resource document ID and how it's
+        referenced from within this document.
+      type: object
+      required:
+        - document-id
+        - ref
+      properties:
+        document-id:
+          description: Unique document ID for the secure resource document.
+          type: string
+        ref:
+          description: Internal short-name reference to this document.
+          type: string
+
+  inventory:
+    description: List of resource access APIs and related security resources.
+    type: array
+    items:
+      $ref: "#/$defs/library"
+
+
+$defs:
+
+  # -------------------------------------------------------------------------
+  # Each Library
+
+  library:
+    description: Relates to a single packaged group of API.
+    type: object
+    required:
+      - def
+      - apis
+    properties:
+      def:
+        $ref: "#/$defs/library-definition"
+      apis:
+        description: List of resource access APIs within this library.
+        type: array
+        items:
+          $ref: "#/$defs/library-api"
+
+  # -------------------------------------------------------------------------
+  # Types of Library Defintions Supported
+
+  library-definition:
+    oneOf:
+      - $ref: "library-definition-multiple-versions"
+      - $ref: "library-definition-one-version"
+
+  library-definition-multiple-versions:
+    title: Multiple Version Library Definition
+    description: Defines the library.
+    type: object
+    required:
+      - name
+      - versions
+    properties:
+      module:
+        description: Name of the module for the library
+        type: string
+      name:
+        description: Name of the library
+        type: string
+      versions:
+        description: List of applicable library versions
+        type: array
+        items:
+          type: string
+
+  library-definition-one-version:
+    title: Single Library Definition
+    description: Defines the library.
+    type: object
+    required:
+      - name
+      - version
+    properties:
+      module:
+        description: Name of the module for the library
+        type: string
+      name:
+        description: Name of the library
+        type: string
+      version:
+        description: List of applicable library versions
+        type: array
+        items:
+          type: string
+
+  # -------------------------------------------------------------------------
+  # API Description
+
+  library-api:
+    title: Library API
+    description: >
+      A single API endpoint.  For object-oriented systems that allow for overloading names,
+      multiple APIs can have the same endpoint but with different arguments.
+    type: object
+    required:
+      - endpoint
+      - resources
+    properties:
+      description:
+        description: An optional text description of the endpoint.
+        type: string
+      doc:
+        description: An optional reference to the API documentation.
+        type: string
+      endpoint:
+        description: The fully qualified API endpoint.  This is framework specific.
+        type: string
+      arguments:
+        description: List of arguments taken by the endpoint.  These can be referenced by the resources list.
+        type: array
+        items:
+          description: An endpoint argument.  If no name is given, then the argument is referenced by its index.
+          type: object
+          required: []
+          properties:
+            name:
+              description: argument name
+              type: string
+            type:
+              description: argument type; framework specific
+              type: string
+            value:
+              description: >
+                For situations where an argument value has a specific meaning, such as the Python
+                statement "open('name.txt', 'r')" verses "open('name.txt', 'w')".
+              type:
+                - string
+                - integer
+                - boolean
+      resources:
+        description: List of all secure resources accessed by this endpoint.
+        type: array
+        items:
+          title: Resource Reference
+          description: A secure resource accessed by this endpoint.
+          type: object
+          required:
+            - id
+          properties:
+            id:
+              description: >
+                Secure resource document reference (as defined in the "secure-resources" section), and that
+                document's internal resource id, in the form "(document ref)@(internal id)"
+              type: string
+            additionalProperties:
+              oneOf:
+                - description: A constant value for the secure resource parameter.
+                  type: object
+                  properties:
+                    const:
+                      description: A constant value.
+                      type:
+                        - string
+                        - integer
+                        - float
+                        - null
+                        - boolean
+                - description: The endpoint argument specifies the resource parameter.
+                  type: object
+                  properties:
+                    argument:
+                      description: The argument name or index (base 0).
+                      type:
+                        - string
+                        - integer
+                - description: The endpoint owning object's member value.
+                  type: object
+                  properties:
+                    member:
+                      description: The member value's name
+                      type: string
+                - description: A complex expression that computes the resource parameter value.
+                  type: object
+                  properties:
+                    expression:
+                      description: A computed expression based on argument and object values.
+                      type: string

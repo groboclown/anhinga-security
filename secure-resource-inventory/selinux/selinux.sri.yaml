@@ -1,0 +1,51 @@
+"$schema": https://github.com/groboclown/anhinga-security/schema/secure-resource-inventory.v0.schema.yaml
+
+schema-version: v0.0
+
+document-id: selinux-0.0
+
+resources:
+  - id: sock_file:write
+    name: sock_file write
+    parameters:
+      location: {}
+
+  - id: sock_file:read
+    name: sock_file read
+    parameters:
+      location: {}
+
+  - id: unix_stream_socket:connectto
+    name: unix_stream_socket connectto
+    parameters:
+      location: {}
+
+  - id: dir:getattr
+    name: dir getattr
+    parameters:
+      location: {}
+
+  - id: dir:read
+    name: dir read
+    parameters:
+      location: {}
+
+  - id: dir:write
+    name: dir write
+    parameters:
+      location: {}
+
+  - id: file:getattr
+    name: file getattr
+    parameters:
+      location: {}
+
+  - id: file:read
+    name: file read
+    parameters:
+      location: {}
+
+  - id: file:write
+    name: file write
+    parameters:
+      location: {}

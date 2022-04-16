@@ -1,6 +1,0 @@
-
-"$id": https://github.com/groboclown/anhinga-security/schema/api-usage-trace.schema.yaml
-"$schema": https://json-schema.org/draft/2020-12/schema
-description: >
-  Describes the static analysis of a codebase, tracing usage of known security usage
-  library calls through the codebase.

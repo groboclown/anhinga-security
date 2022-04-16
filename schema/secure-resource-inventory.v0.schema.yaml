@@ -1,0 +1,60 @@
+"$id": https://github.com/groboclown/anhinga-security/schema/secure-resource-inventory.v0.schema.yaml
+"$schema": https://json-schema.org/draft/2020-12/schema
+title: Secure Resource Inventory
+description: >
+  Describes a catalogue of secure resource descriptions.  This can be platform specific (Windows vs
+  Linux), resource specific (kernel access vs network access), or any other combination.
+type: object
+required:
+  - schema-version
+  - document-id
+  - resources
+properties:
+  schema-version:
+    description: The schema version used by the document.  It must match this schema's $id.
+    type: string
+    const: v0.0
+
+  document-id:
+    title: Document ID
+    description: >
+      A unique identifier for this document, which may be different than the physical location.
+      This is used by the resource access inventory documents.
+    type: string
+
+  resources:
+    description: List of secure resources.
+    type: array
+    items:
+      title: Secure Resource
+      description: A secure resource.
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: ID of this resource, unique within this document.
+          type: string
+        name:
+          description: >
+            Name of the resource, possibly an internal name, e.g. SELinux svirt_qemu_net_t.
+            If not given, then the "id" field is used as the name.
+          type: string
+        description:
+          description: Long form details about the resource.
+          type: string
+        parameters:
+          description: >
+            A mapping of parameter names along with details about it.  References to this resource
+            require the parameters to be specified.
+          type: object
+          properties:
+            required:
+              type: boolean
+          additionalProperties:
+            type: object
+            required: []
+            properties:
+              description:
+                description: Description of the parameter.
+                type: string

@@ -1,0 +1,23 @@
+"$schema": https://github.com/groboclown/anhinga-security/schema/security-usage-inventory.v0.schema.yaml
+
+schema-version: v0.0
+
+framework: java
+
+secure-resources:
+  - document-id: selinux-0.0
+    ref: selinux
+
+
+inventory:
+  - def:
+      name: jdk:io
+      version: 11
+    apis:
+      - endpoint: java.io.FileInputStream#<ctor>
+        arguments:
+          - type: string
+        resources:
+          - id: "selinux@file:read"
+            location:
+              argument: 0

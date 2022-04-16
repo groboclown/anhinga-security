@@ -1,4 +1,0 @@
-"$id": https://github.com/groboclown/anhinga-security/schema/security-usage-inventory.schema.yaml
-"$schema": https://json-schema.org/draft/2020-12/schema
-description: >
-  Describes which security resources different library API use.
