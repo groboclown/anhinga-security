@@ -12,3 +12,152 @@ properties:
     description: The schema version used by the document.  It must match this schema's $id.
     type: string
     const: v0.0
+  resource-access:
+    title: Resource Access List
+    description: List of resource access inventory items along with the static tracing.
+    type: array
+    item:
+      title: Resource Access
+      description: A resource access item with the code point that executed it.
+      required:
+        - api
+        - trace
+      properties:
+        api:
+          title: Ref Library API
+          description: A reference to a library API declared in a resource access inventory.
+          type: object
+          required:
+            - name
+            - version
+            - endpoint-id
+          properties:
+            module:
+              type: string
+            name:
+              type: string
+            version:
+              type: string
+            endpoint-id:
+              description: the unique ID within the library API referencing the endpoint.
+              type: string
+        traces:
+          title: Access Trace List
+          description: Separate invocations for this api.
+          type: array
+          items:
+            $ref: "#/$defs/codepoint-id"
+  codepoint-traces:
+    title: Codepoint Trace List
+    description: List of codepoints analyzed and the trace of code that calls into them.
+    type: array
+    items:
+      $ref: "#/$defs/codepoint-trace"
+
+
+$defs:
+  codepoint-id:
+    title: Code Point Identifier Identifier
+    description: A unique-to-this-document identifier for a code point trace.
+    type: string
+
+  codepoint-trace:
+    oneOf:
+      - title: Code Point Trace
+        description: A position in the code and traces for invocations to that code.
+        type: object
+        required:
+          - codepoint
+          - id
+        properties:
+          codepoint:
+            $ref: "#/$defs/codepoint"
+          id:
+            $ref: "#/$defs/codepoint-id"
+          invoked-by:
+            title: Invoked By List
+            description: List of code points that invoke this code point.
+            type: array
+            items:
+              $ref: "#/$defs/codepoint-id"
+          argument-sources:
+            title: Argument Trace
+            description: List of argument definitions and traces their source.
+            type: array
+            items:
+              $ref: "#/$defs/argument-source"
+      - title: Function Trace
+        description: A function call and traces for its invocation.
+        type: object
+        required:
+          - codepoint
+          - id
+        properties:
+          codepoint:
+            $ref: "#/$defs/codepoint"
+          id:
+            $ref: "#/$defs/codepoint-id"
+          arguments:
+            description: List of arguments taken by the function.
+            type: array
+            items:
+              description: An endpoint argument.  If no name is given, then the argument is referenced by its index.
+              type: object
+              required: []
+              properties:
+                name:
+                  description: argument name
+                  type: string
+                type:
+                  description: argument type; framework specific
+                  type: string
+                value:
+                  description: >
+                    For situations where an argument value has a specific meaning, such as the Python
+                    statement "open('name.txt', 'r')" verses "open('name.txt', 'w')".
+                  type:
+                    - string
+                    - integer
+                    - boolean
+                trace:
+                  description: >
+                    Parts of the argument that should be traced.  For example, if an object is passed as an argument,
+                    there may be a part of that object that is important for the security concern.
+                  type: array
+                  items:
+                    type: string
+          invoked-by:
+            title: Invoked By List
+            description: List of code points that invoke this function.
+            type: array
+            items:
+              $ref: "#/$defs/codepoint-id"
+          inheritance:
+            title: Inheritance List
+            description: List of known inheritance that can use this function.
+            type: array
+            items:
+              type: string
+
+  codepoint:
+    title: Code Point
+    description: Describes a point in user code.
+    type: object
+    required: []
+    properties:
+      source:
+        type: string
+      line:
+        type: integer
+      column:
+        type: integer
+      position:
+        type: integer
+
+  argument-source:
+    title: Argument Source
+    description: The source of an argument to a code point.
+    type: object
+    required:
+      - name
+      - codepoint-id
