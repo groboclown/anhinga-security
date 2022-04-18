@@ -2,15 +2,18 @@
 package net.groboclown.anhinga.analysis.problems;
 
 import com.google.gson.JsonParseException;
+import net.groboclown.anhinga.analysis.util.CollectionHelper;
 import net.groboclown.retval.SourcedProblem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+
 
 /**
  * A Problem that came from loading a JSON file.
  */
-public class JsonProblem implements SourcedProblem {
+public class JsonProblem implements SourcedProblem, ThrowableProblem {
     private final String source;
     private final String localMessage;
     private final Throwable error;
@@ -40,5 +43,11 @@ public class JsonProblem implements SourcedProblem {
     @Nullable
     public Throwable getError() {
         return error;
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Throwable> getErrors() {
+        return CollectionHelper.optionalSingleton(error);
     }
 }
