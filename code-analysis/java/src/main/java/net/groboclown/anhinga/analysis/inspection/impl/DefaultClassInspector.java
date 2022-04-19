@@ -1,6 +1,9 @@
 // Released under the MIT license.  See the LICENSE file for details.
-package net.groboclown.anhinga.analysis.inspection;
+package net.groboclown.anhinga.analysis.inspection.impl;
 
+import net.groboclown.anhinga.analysis.inspection.ClassInspector;
+import net.groboclown.anhinga.analysis.inspection.ClassRepository;
+import net.groboclown.anhinga.analysis.inspection.MethodInspector;
 import net.groboclown.anhinga.analysis.model.ClassTrace;
 import net.groboclown.anhinga.analysis.model.FieldSet;
 import net.groboclown.anhinga.analysis.model.MethodTrace;
@@ -70,7 +73,7 @@ public class DefaultClassInspector implements ClassInspector {
         final FieldSet fields = FieldSet.fromClassNode(node);
         for (final MethodNode method: node.methods) {
             final RetVal<MethodTrace> res = methodInspector.inspectMethod(
-                    method, fields, repository);
+                    node.name, method, fields, repository);
             problems.with(res, methods::add);
         }
         return problems.thenValue(() ->

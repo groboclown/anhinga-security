@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 public interface MethodInspector {
     @Nonnull
     RetVal<MethodTrace> inspectMethod(
+            @Nonnull String ownerClass,
             @Nonnull MethodNode method, @Nonnull FieldSet fields,
             @Nonnull ClassRepository repository);
 }

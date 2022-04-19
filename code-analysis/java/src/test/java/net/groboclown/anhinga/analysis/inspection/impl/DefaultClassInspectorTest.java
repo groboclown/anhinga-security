@@ -1,6 +1,10 @@
 // Released under the MIT license.  See the LICENSE file for details.
-package net.groboclown.anhinga.analysis.inspection;
+package net.groboclown.anhinga.analysis.inspection.impl;
 
+import net.groboclown.anhinga.analysis.inspection.ClassPathInspector;
+import net.groboclown.anhinga.analysis.inspection.MethodInspector;
+import net.groboclown.anhinga.analysis.inspection.MockClassRepository;
+import net.groboclown.anhinga.analysis.ResourceUtil;
 import net.groboclown.anhinga.analysis.model.ClassTrace;
 import net.groboclown.anhinga.analysis.model.FieldTrace;
 import net.groboclown.anhinga.analysis.model.MethodTrace;
@@ -19,13 +23,13 @@ class DefaultClassInspectorTest {
 
     @Test
     void inspectClassFile() {
-        final byte[] classFile = ResourceUtil.getResourceAsBytes("SocketAppender.class");
+        final byte[] classFile = ResourceUtil.getResourceAsBytes(ClassPathInspector.class, "SocketAppender.class");
         final DefaultClassInspector inspector = new DefaultClassInspector();
         final MethodInspector methodInspector = Mockito.mock(MethodInspector.class);
         final MockClassRepository repository = new MockClassRepository();
         Mockito.when(methodInspector.inspectMethod(
-                        Mockito.any(),
-                        Mockito.any(), Mockito.same(repository)))
+                        Mockito.any(), Mockito.any(), Mockito.any(),
+                        Mockito.same(repository)))
                 .then((a) -> RetVal.ok(new MethodTrace(
                         a.getArgument(0, MethodNode.class).name,
                         a.getArgument(0, MethodNode.class).desc,

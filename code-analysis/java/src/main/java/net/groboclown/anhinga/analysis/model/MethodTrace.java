@@ -58,4 +58,8 @@ public class MethodTrace {
     public List<Argument> getArguments() {
         return arguments;
     }
+
+    public List<EndpointInvocation> getEndpointInvocations() {
+        return endpointInvocations;
+    }
 }

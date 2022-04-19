@@ -1,5 +1,5 @@
 // Released under the MIT license.  See the LICENSE file for details.
-package net.groboclown.anhinga.analysis.inspection;
+package net.groboclown.anhinga.analysis;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class ResourceUtil {
     @Nonnull
-    public static InputStream getResourceAsStream(@Nonnull String name) {
-        final InputStream ret = ResourceUtil.class.getResourceAsStream(name);
+    public static InputStream getResourceAsStream(@Nonnull Class<?> base, @Nonnull String name) {
+        final InputStream ret = base.getResourceAsStream(name);
         if (ret == null) {
             throw new IllegalStateException("No such resource " + name);
         }
@@ -21,8 +21,8 @@ public class ResourceUtil {
     }
 
     @Nonnull
-    public static byte[] getResourceAsBytes(@Nonnull String name) {
-        try (InputStream inp = getResourceAsStream(name)) {
+    public static byte[] getResourceAsBytes(@Nonnull Class<?> base, @Nonnull String name) {
+        try (InputStream inp = getResourceAsStream(base, name)) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             writeTo(inp, out);
             return out.toByteArray();
@@ -31,9 +31,9 @@ public class ResourceUtil {
         }
     }
 
-    public static List<String> getResourceLines(@Nonnull String name) {
+    public static List<String> getResourceLines(@Nonnull Class<?> base, @Nonnull String name) {
         try (BufferedReader inp = new BufferedReader(new InputStreamReader(
-                getResourceAsStream(name), StandardCharsets.UTF_8))) {
+                getResourceAsStream(base, name), StandardCharsets.UTF_8))) {
             final List<String> ret = new ArrayList<>();
             String line;
             while ((line = inp.readLine()) != null) {
@@ -48,9 +48,9 @@ public class ResourceUtil {
         }
     }
 
-    public static void saveResourceAs(@Nonnull String resourceName, @Nonnull File outputFile) {
+    public static void saveResourceAs(@Nonnull Class<?> base, @Nonnull String resourceName, @Nonnull File outputFile) {
         try (
-                InputStream inp = getResourceAsStream(resourceName);
+                InputStream inp = getResourceAsStream(base, resourceName);
                 OutputStream out = new FileOutputStream(outputFile);
         ) {
             writeTo(inp, out);

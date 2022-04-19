@@ -1,6 +1,10 @@
 // Released under the MIT license.  See the LICENSE file for details.
-package net.groboclown.anhinga.analysis.inspection;
+package net.groboclown.anhinga.analysis.inspection.impl;
 
+import net.groboclown.anhinga.analysis.inspection.ClassInspector;
+import net.groboclown.anhinga.analysis.inspection.ClassRepository;
+import net.groboclown.anhinga.analysis.inspection.JarInspector;
+import net.groboclown.anhinga.analysis.inspection.MethodInspector;
 import net.groboclown.anhinga.analysis.model.ClassTrace;
 import net.groboclown.retval.ProblemCollector;
 import net.groboclown.retval.Ret;
@@ -38,6 +42,7 @@ public class DefaultJarInspector implements JarInspector {
                     // The jar can contain duplicate entries if there are
                     // multiple versions.  See multi-versioned jar files for more
                     // information.
+System.err.println("Analyzing " + entry.getName() + " (" + entry.getSize() + " bytes)");
                     final RetVal<ClassTrace> res = classInspector.inspectClassStream(
                             entry.getName(), jarFile.getInputStream(entry),
                             methodInspector, repository);

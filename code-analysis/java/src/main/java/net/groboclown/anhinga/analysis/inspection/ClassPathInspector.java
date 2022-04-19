@@ -1,6 +1,9 @@
 // Released under the MIT license.  See the LICENSE file for details.
 package net.groboclown.anhinga.analysis.inspection;
 
+import net.groboclown.anhinga.analysis.inspection.impl.DefaultClassInspector;
+import net.groboclown.anhinga.analysis.inspection.impl.DefaultJarInspector;
+import net.groboclown.anhinga.analysis.inspection.impl.DefaultMethodInspector;
 import net.groboclown.anhinga.analysis.model.AnalyzedClasses;
 import net.groboclown.anhinga.analysis.model.ClassTrace;
 import net.groboclown.retval.ProblemCollector;
